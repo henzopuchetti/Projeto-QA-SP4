@@ -9,56 +9,318 @@
 		{
 			"name": "New Request",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"TESTE7 da Silva\",\r\n  \"email\": \"adminteste7@email.com\",\r\n  \"password\": \"SenhaSegura\",\r\n  \"role\": \"ADMIN\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "New Request",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"adminteste7@email.com\",\r\n  \"password\": \"SenhaSegura\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Este teste verifica se o pátio foi criado (status 201/200),\r",
+							"// se a resposta contém id, nome, endereco e capacidade,\r",
+							"// e salva patioId/capacidadeCriada para os próximos testes.\r",
+							"\r",
+							"pm.test(\"Status code é 201 ou 200 (criado)\", function () {\r",
+							"  pm.expect([200,201]).to.include(pm.response.code);\r",
+							"});\r",
+							"const json = pm.response.json();\r",
+							"\r",
+							"[\"id\",\"nome\",\"endereco\",\"capacidade\"].forEach(k => \r",
+							"  pm.test(\"Tem campo \"+k, () => pm.expect(json).to.have.property(k))\r",
+							");\r",
+							"\r",
+							"pm.environment.set(\"patioId\", json.id);\r",
+							"pm.environment.set(\"capacidadeCriada\", json.capacidade);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Patio de Teste\",\r\n  \"endereco\": \"RUA.teste, 1200 - Zona Sul\",\r\n  \"capacidade\": 50\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/patios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"patios"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Este teste confirma que o GET do pátio retornou 200 e que a resposta traz os campos básicos: id, nome, endereco e capacidade.\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code é 200\", function () { pm.response.to.have.status(200); });\r",
+							"const patio = pm.response.json();\r",
+							"\r",
+							"[\"id\",\"nome\",\"endereco\",\"capacidade\"].forEach(k => {\r",
+							"  pm.test(\"Resposta tem \" + k, function () {\r",
+							"    pm.expect(patio).to.have.property(k);\r",
+							"  });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/patios/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"patios",
+						"6"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Este teste verifica que a moto foi criada (status 201/200),\r",
+							"// confere que a resposta possui id, placa, modelo e ano,\r",
+							"// e salva motoId para uso nos próximos testes.\r",
+							"\r",
+							"pm.test(\"Status code é 201 ou 200 (moto criada)\", () => {\r",
+							"  pm.expect([200,201]).to.include(pm.response.code);\r",
+							"});\r",
+							"const moto = pm.response.json();\r",
+							"[\"id\",\"placa\",\"modelo\",\"ano\"].forEach(k =>\r",
+							"  pm.test(\"Tem \"+k, () => pm.expect(moto).to.have.property(k))\r",
+							");\r",
+							"\r",
+							"pm.environment.set(\"motoId\", moto.id);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"placa\": \"ABC-1298\",\r\n  \"modelo\": \"MOTTU_SPORT\",\r\n  \"ano\": 2023,\r\n  \"quilometragem\": 15000,\r\n  \"status\": \"DISPONIVEL\",\r\n  \"patioId\": 6\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/motos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"motos"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Este teste confirma que a atualização da moto deu certo (status 200),\r",
+							"// valida que o modelo foi alterado para \"MOTTU_E\" e que o ano é 2023.\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code é 200 (moto atualizada)\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"const m = pm.response.json();\r",
+							"pm.test(\"Modelo atualizado\", () => pm.expect(m.modelo).to.eql(\"MOTTU_E\"));\r",
+							"pm.test(\"Ano coerente\",    () => pm.expect(m.ano).to.eql(2023));\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"placa\": \"ABC-1298\",\r\n  \"modelo\": \"MOTTU_E\",\r\n  \"ano\": 2023,\r\n  \"quilometragem\": 15000,\r\n  \"status\": \"DISPONIVEL\",\r\n  \"patioId\": 6\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/motos/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"motos",
+						"4"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Este teste valida o erro esperado: a API deve responder 404 (Not Found) ao acessar um recurso inexistente.\r",
+							"\r",
+							"pm.test(\"Status code é 404 (erro esperado)\", () => {\r",
+							"  pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/motos/100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"motos",
+						"100"
+					]
+				}
 			},
 			"response": []
 		}
